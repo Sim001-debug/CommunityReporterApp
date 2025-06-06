@@ -56,6 +56,7 @@ This API uses **JWT** for secure login. After login, you’ll receive a token th
 
 ### 📄 Reports
 
+- `GET /api/reports` - Get reports by Owner
 - `GET /api/reports` — Get all reports
 - `GET /api/reports/{id}` — Get report by ID
 - `POST /api/reports` — Create a new report
