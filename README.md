@@ -139,5 +139,5 @@ Real-world role-based access
 Simbongile Dyi
 Junior Software Engineer | Full Stack Developer
 📧 Simbongile.Dyi99@gmail.com
-🔗 LinkedIn
+https://www.linkedin.com/in/simbongile-dyi-288227249/
 
