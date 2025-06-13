@@ -24,7 +24,7 @@ namespace CommunityReporterApp.Controllers
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _context = context ?? throw new ArgumentNullException(nameof(_context));
         }
-
+        
         [HttpGet("owner/{owner}")]
         public async Task<ActionResult> GetReportsByOwner([FromRoute] string owner)
         {
@@ -77,6 +77,7 @@ namespace CommunityReporterApp.Controllers
             }
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Report>>> GetAllReports()
         {
@@ -112,7 +113,7 @@ namespace CommunityReporterApp.Controllers
             }
         }
 
-        //[Authorize(Roles = "AdminOnly")]
+        [Authorize(Roles = "Admin,admin")]
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateReportsStatus(Guid id, [FromBody] UpdateReportStatusRequest request)
         {
@@ -129,7 +130,7 @@ namespace CommunityReporterApp.Controllers
             return Ok(report);
         }
 
-        //[Authorize(Roles = "AdminOnly")]
+        [Authorize(Roles = "Admin,admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteReport(Guid id)
         {
