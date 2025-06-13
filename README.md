@@ -1,28 +1,31 @@
 ﻿# 🏘️ Community Reporter API
 
-An ASP.NET Core Web API that allows users to report community issues such as potholes, electricity faults, crimes, and more. Built with JWT authentication and PostgreSQL.
+An **ASP.NET Core Web API** that allows users to report community issues such as potholes, electricity faults, crimes, and more — with secure authentication and role-based access control.
 
 ---
 
 ## 🚀 Features
 
-- ✅ User Registration & Login with JWT Authentication
-- ✅ Report CRUD (Create, Read, Update, Delete)
-- ✅ Role-based Authorization (e.g., Admin)
-- ✅ Swagger Documentation
-- ✅ PostgreSQL Integration
-- ✅ Secure Password Hashing
+- ✅ User Registration & Login with **JWT Authentication**
+- ✅ **Role-based Authorization** (e.g., Admin-only routes)
+- ✅ Report **CRUD Operations** (Create, Read, Update, Delete)
+- ✅ Integrated with **PostgreSQL**
+- ✅ **Swagger Documentation**
+- ✅ Secure **Password Hashing** with built-in salting (ASP.NET Core Identity)
+- ✅ Implements **Security Headers** to prevent XSS, CSRF, and clickjacking
+- ✅ Follows **OWASP Top 10** secure coding principles
 
 ---
 
 ## 📦 Technologies Used
 
-ASP.NET Core 7
-Entity Framework Core
-PostgreSQL
-JWT Authentication
-Swagger / OpenAPI
-C#
+- ASP.NET Core 7
+- Entity Framework Core
+- PostgreSQL
+- JWT Authentication
+- Swagger / OpenAPI
+- C#
+- .NET Security Headers Middleware
 
 ---
 
@@ -34,16 +37,42 @@ CommunityReporterApp/
 ├── Models/ # Entity Models (AppUser, Report, etc.)
 ├── Data/ # DbContext and Seeder
 ├── SeedData/ # Initial dummy data
+├── Middleware/ # Custom middlewares (e.g., SecurityHeaders)
 ├── Program.cs # Main entry point with middleware config
 ├── appsettings.json # Configuration settings
 └── ...
 
+yaml
+Copy
+Edit
 
 ---
 
-## 🔐 Authentication
+## 🔐 Authentication & Authorization
 
-This API uses **JWT** for secure login. After login, you’ll receive a token that must be added in the `Authorization` header (Bearer Token) for secured endpoints.
+- Uses **JWT Bearer Tokens** for authentication.
+- Endpoints are protected based on **roles** (`Admin`, `User`, etc).
+- Admins can access all reports and user data; users can only manage their own.
+
+**Example** header for protected endpoints:
+Authorization: Bearer <your-jwt-token>
+
+markdown
+Copy
+Edit
+
+---
+
+## 🔒 Security Enhancements
+
+- 🛡️ **Security Headers** added via custom middleware:
+  - `Content-Security-Policy`
+  - `X-Frame-Options`
+  - `X-Content-Type-Options`
+  - `Permissions-Policy`
+- 🧠 Prevents **Cross-Site Scripting (XSS)** and **CSRF**
+- 🔐 Implements **secure password hashing** (with salting via ASP.NET Identity)
+- 🕵🏽‍♂️ Aligned with **OWASP Top 10** best practices
 
 ---
 
@@ -51,49 +80,64 @@ This API uses **JWT** for secure login. After login, you’ll receive a token th
 
 ### 🔑 Auth
 
-- `POST /api/auth/register` — Register a new user  
-- `POST /api/auth/login` — Login and receive a JWT
+| Method | Endpoint               | Description             |
+|--------|------------------------|-------------------------|
+| POST   | `/api/auth/register`   | Register a new user     |
+| POST   | `/api/auth/login`      | Login and receive a JWT |
+| GET    | `/api/auth/debug-token`| Check your token info   |
+| GET    | `/api/auth/debug-auth` | Check your role/auth    |
 
 ### 📄 Reports
 
-- `GET /api/reports` - Get reports by Owner
-- `GET /api/reports` — Get all reports
-- `GET /api/reports/{id}` — Get report by ID
-- `POST /api/reports` — Create a new report
-- `PUT /api/reports/{id}` — Update report
-- `DELETE /api/reports/{id}` — Delete report
+| Method | Endpoint                        | Description               |
+|--------|----------------------------------|---------------------------|
+| GET    | `/api/reports`                   | Get all reports (Admin)   |
+| GET    | `/api/reports/owner/{owner}`     | Reports by specific owner |
+| GET    | `/api/reports/{id}`              | Get report by ID          |
+| POST   | `/api/reports`                   | Create a report           |
+| PUT    | `/api/reports/{id}`              | Update a report           |
+| DELETE | `/api/reports/{id}`              | Delete a report           |
 
 ---
 
 ## ⚙️ Getting Started
 
 1. **Clone the repo**
-   ```bash
-   git clone https://github.com/yourusername/community-reporter-api.git
-   cd community-reporter-api
+```bash
+git clone https://github.com/Sim001-debug/CommunityReporterApp.git
+cd CommunityReporterApp
+Set up the database
 
-2. **Set u the database**
-1. Ensure the PostSQL is running
-1. Update appsettings.json with your connection string
+Ensure PostgreSQL is running
 
-3. **Run the application**
-1. dotnet build
-1. dotnet run
+Update your appsettings.json with your connection string
 
-4. **Visist Swagger**
-|Method  |  Endpoint                     | Description             |
-| ------ | ----------------------------- | ----------------------- |
-| POST   | `/api/auth/register`          | Register a new user     |
-| POST   | `/api/auth/login`             | Login and get JWT token |
-| GET    | `/api/reports`                | Get all reports         |
-| POST   | `/api/reports`                | Create a report         |
-| DELETE | `/api/reports/{id}`           | Delete a report         |
-| GET    | `/api/reports/owner/{owner}`  | Get reports by owner    |
-| GET    | `/api/reports/category/{cat}` | Get reports by category |
+Run the application
 
-🙌 Author
+bash
+Copy
+Edit
+dotnet build
+dotnet run
+Open Swagger UI
+Navigate to: https://localhost:<port>/swagger
+
+🧠 Learning Goals
+This project was built with a focus on:
+
+Secure API development
+
+Practical authentication & authorization
+
+Backend best practices
+
+Deploy-ready .NET apps
+
+Real-world role-based access
+
+👨🏽‍💻 Author
 Simbongile Dyi
-Software Engineer | Full Stack :)
+Junior Software Engineer | Full Stack Developer
+📧 Simbongile.Dyi99@gmail.com
+🔗 LinkedIn
 
-https://www.linkedin.com/in/simbongile-dyi-288227249/
-Simbongile.Dyi99@gmail.com
