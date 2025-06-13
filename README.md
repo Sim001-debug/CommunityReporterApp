@@ -72,7 +72,6 @@ Edit
   - `Permissions-Policy`
 - 🧠 Prevents **Cross-Site Scripting (XSS)** and **CSRF**
 - 🔐 Implements **secure password hashing** (with salting via ASP.NET Identity)
-- 🕵🏽‍♂️ Aligned with **OWASP Top 10** best practices
 
 ---
 
