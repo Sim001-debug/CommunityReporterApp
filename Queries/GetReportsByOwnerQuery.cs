@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CommunityReporterApp.Queries
 {
-    public class GetReportsByOwnerQuery : IRequest<List<Report>> //IRequest<List<Report>> tells MediatR this query will return a list of Report objects.
+    public class GetReportsByOwnerQuery : IRequest<List<Report>>
     {
         public GetReportsByOwnerQuery(string owner)
         {
@@ -19,9 +19,9 @@ namespace CommunityReporterApp.Queries
     {
         private readonly AppDbContext _context;
 
-        public GetReportsByOwnerQueryHandler(AppDbContext conext)
+        public GetReportsByOwnerQueryHandler(AppDbContext context)
         {
-            _context = conext;
+            _context = context;
         }
 
         public async Task<List<Report>> Handle(GetReportsByOwnerQuery request, CancellationToken cancellationToken)

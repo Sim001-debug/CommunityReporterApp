@@ -63,12 +63,17 @@ builder.Services.AddCors(options =>
     options.AddPolicy("SecurePolicy", builder =>
     {
         builder
-            .WithOrigins("https://mydomaim.com")
+            .WithOrigins(
+                "https://mydomaim.com",
+                "http://localhost:3000",
+                "https://localhost:3000"
+            )
             .WithMethods("GET", "POST", "PUT", "DELETE")
             .WithHeaders("Authorization", "Content-Type")
             .AllowCredentials();
     });
 });
+
 
 // Add Mediator
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(Assembly.GetExecutingAssembly()));

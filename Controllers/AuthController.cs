@@ -72,7 +72,12 @@ namespace CommunityReporterApp.Controllers
                 return Unauthorized("Invalid credentials.");
 
             var token = GenerateJwtToken(user);
-            return Ok(new { token });
+            return Ok(new 
+            {   
+                token,
+                id = user.Id,
+                userName = user.Username,
+            });
         }
 
         private string GenerateJwtToken(AppUser user)

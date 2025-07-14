@@ -1,4 +1,5 @@
 ﻿using CommunityReporterApp.Data;
+using CommunityReporterApp.DTOs;
 using CommunityReporterApp.Models;
 using CommunityReporterApp.Queries;
 using MediatR;
@@ -48,20 +49,35 @@ namespace CommunityReporterApp.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> CreateReport([FromBody] Report report)
+        public async Task<IActionResult> CreateReport([FromForm] ReportCreateDto dto)
         {
-            if (report == null)
-            {
-                return BadRequest("Report cannot be null");
-            }
+            if (dto == null) return BadRequest("Report cannot be null");
 
-            // Assign a new unique ID
-            report.ReportId = Guid.NewGuid();
-
-            // If owner is not provided, default it to "Anonymous"
-            if (string.IsNullOrWhiteSpace(report.Owner))
+            var report = new Report
             {
-                report.Owner = "Anonymous";
+                ReportId = Guid.NewGuid(),
+                UserId = dto.UserId,
+                Category = dto.Category,
+                Description = dto.Description,
+                Latitude = dto.Latitude,
+                Longitude = dto.Longitude,
+                CreatedAt = DateTime.UtcNow,
+                UpdatedDate = DateTime.UtcNow,
+                Status = "Pending",
+                Owner = string.IsNullOrWhiteSpace(dto.Owner) ? "Anonymous" : dto.Owner
+            };
+
+            if (dto.Image != null)
+            {
+                // Save the image to wwwroot/uploads or use S3
+                var fileName = $"{Guid.NewGuid()}_{dto.Image.FileName}";
+                var filePath = Path.Combine("wwwroot/uploads", fileName);
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await dto.Image.CopyToAsync(stream);
+                }
+
+                report.ImageUrl = $"/uploads/{fileName}";
             }
 
             try
@@ -73,9 +89,10 @@ namespace CommunityReporterApp.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error creating report");
-                return StatusCode(500, "Internal Server error");
+                return StatusCode(500, "Internal Server Error");
             }
         }
+
 
         [Authorize(Roles = "Admin")]
         [HttpGet]
@@ -93,23 +110,24 @@ namespace CommunityReporterApp.Controllers
             }
         }
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Report>> GetReportById(Guid id)
+        [HttpGet("userId/{userId}")]
+        public async Task<ActionResult<Report>> GetReportById([FromRoute] Guid userId)
         {
             try
             {
-                var report = await _context.Reports.FindAsync(id);
-                if (report == null)
+                var reportList = await _mediator.Send(new GetReportsByUserIdQuery(userId));
+                if (reportList == null || !reportList.Any())
                 {
-                    return NotFound();
+                    _logger.LogWarning("No reports found for user ID: {UserId}", userId);
+                    return NotFound($"No reports found for user ID: {userId}.");
                 }
 
-                return Ok(report);
+                return Ok(reportList);
             }
             catch(Exception ex)
             {
-                _logger.LogError(ex, "Error retrieving report by ID");
-                return StatusCode(500, "Internal server error");
+                _logger.LogError(ex, "Error occured while fetching reports for User ID: {userId}", userId);
+                return StatusCode(500, "An error occured while processing your request.");
             }
         }
 
