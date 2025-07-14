@@ -119,6 +119,8 @@ Edit
 dotnet build
 dotnet run
 Open Swagger UI
+<img width="1902" height="956" alt="image" src="https://github.com/user-attachments/assets/d8c806a1-186d-4bcc-bb4a-2d4487f91df8" />
+
 Navigate to: https://localhost:<port>/swagger
 
 🧠 Learning Goals
